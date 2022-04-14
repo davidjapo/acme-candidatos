@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Agregar candidato</title>
+</head>
+<body>
+	<br>
+	<br>
+	<div align="center">
+		<form action="FrontController?option=doAlta" method="POST" enctype="multipart/form-data">
+			<p>Nombre: <input type="text" name="nombre" placeholder="Introduce un nombre" required="required"/></p>
+			<p>Edad: <input type="number" name="edad" placeholder="Introduce una edad" required="required"/></p>
+			<p>Puesto: <input type="text" name="puesto" placeholder="Introduce un puesto" required="required"/></p>
+			<p>Foto: <input type="file" name="foto" value="Buscar" accept="image/*" required="required"/></p>
+			<p>E-mail: <input type="text" name="email" placeholder="Introduce un e-mail" required="required"/></p>
+			<br>
+			<p align="center"><input type="submit" value="Guardar"/></p>
+		</form>
+	</div>
+</body>
+</html>
