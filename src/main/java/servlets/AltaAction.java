@@ -32,6 +32,7 @@ public class AltaAction extends HttpServlet {
 		String nombre= request.getParameter("nombre");
 		int edad= Integer.parseInt(request.getParameter("edad"));
 		String puesto= request.getParameter("puesto");
+	
 		//Recuperamos el parámetro foto como objeto Part:
 		Part foto = request.getPart("foto");
 		String email = request.getParameter("email");
@@ -48,11 +49,11 @@ public class AltaAction extends HttpServlet {
 		//Se llama al método de altaCandidato de la capa de servicio, para añadir el nuevo candidato a la BBDD:
 		service.altaCandidato(nuevoCandidato);
 		
+		//Se llama al método que se encarga de almacenar la foto:
 		guardarFicheroEnServidor(request,foto,nombreFichero);
-		
-		//response.sendRedirect("menu.html"); Se encargará el FrontController de redireccionar a la vista.
 	}
 	
+	//Método para obtener el nombre del fichero de la foto:
 	private String obtenerNombreFichero(Part part) {
 		for(String cd:part.getHeader("content-disposition").split(";")) {
 			if(cd.trim().startsWith("filename")) {
@@ -64,24 +65,10 @@ public class AltaAction extends HttpServlet {
 		return null;
 	}
 	
+	//Este método almacena la foto en la ruta "raíz de la aplicación/foto:
 	private void guardarFicheroEnServidor(HttpServletRequest request, Part part, String nombreFichero) {
 		String url = request.getServletContext().getRealPath("/");
-		
-		//Forma clásica para hacerlo:
-		/*try(InputStream input=part.getInputStream();
-				FileOutputStream output = new FileOutputStream(url+nombreFichero);){
-			int leido = 0;
-			leido = input.read();
-			while(leido != -1) {
-				output.write(leido);
-				leido = input.read();
-			}
-		}catch(IOException ex) {
-			ex.printStackTrace();
-		}*/
-		
-		
-		//Forma más sencilla:
+
 		try {
 			part.write(url+"/fotos/"+nombreFichero);
 		} catch (IOException e) {

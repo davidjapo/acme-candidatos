@@ -12,16 +12,18 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import model.Candidato;
 
-
+//En esta clase se encuentra toda la lógica de negocio correspondiente al acceso a datos:
 public class CandidatosService {
 	
 	private static EntityManager em;
 	
+	//Se hace uso de la unidad de persistencia para envolver los datos correspondientes a la conexión con la BBDD:
 	static {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("empresaPU");
 		em=factory.createEntityManager();
 	}
 	
+	//Método que añade una tupla en la BBDD correspondiente a un candidato en concreto:
 	public void altaCandidato(Candidato candidato) {
 		EntityTransaction tx=em.getTransaction();
 		tx.begin();
@@ -29,6 +31,7 @@ public class CandidatosService {
 		tx.commit();
 	}
 	
+	//Método que elimina un candidato correspondiente al id del Candidato:
 	public void eliminarCandidato(int idCandidato) {
 		Candidato candidato = em.find(Candidato.class, idCandidato);
 		EntityTransaction tx=em.getTransaction();
@@ -39,38 +42,13 @@ public class CandidatosService {
 		tx.commit();
 	}
 	
+	//Metodo que se encarga de obtener los candidatos registrados en format lista de objetos Candidato:
 	public List<Candidato> recuperarCandidatos(){
 		//Se utiliza el método createNamedQuery del objeto EntityManager para acceder a la consulta nominada:
 		TypedQuery<Candidato> query = em.createNamedQuery("Candidato.findAll", Candidato.class);
 		return query.getResultList();
 	}
-	
-	
-	/*
-	 * Si la lista no tiene datos, no devuelve un null, devuelve la lista con tamaño cero.
-	 */
-	public List<Candidato> recuperarCandidatosByPuesto(String puesto){
-		TypedQuery<Candidato> query = em.createNamedQuery("Candidato.findByPuesto", Candidato.class);
-		query.setParameter(1, puesto);
-		return query.getResultList();
-	}
-	
-	
-	//Otro ejemplo de funcionalidad, pero en caso de que no lo encuentre, que me devuelva null:
-	public Candidato buscarPorEmail(String email) {
-		TypedQuery<Candidato> query = em.createNamedQuery("Candidato.findByEmail", Candidato.class);
-		query.setParameter(1, email);
-		//Si no encuentra el dato requerido, la lista estará vacía:
-		List<Candidato> candidatos = query.getResultList(); 
-		return !candidatos.isEmpty()?candidatos.get(0):null;
-		
-		/*Otra forma de hacerlo, utilizando programación funcional:
-		return query.getResultList().stream().findFirst().orElse(null);
-		*/
-	}
-	
-	
-	//Mismo ejemplo de funcionalidad anterior, pero de otro forma.
+
 	//¡OJO! Se producen excepciones que hay controlar en caso de que no existan resultados para dicha condición,
 	//o exista más de un resultado con la misma condición.
 	//Se hace uso de try/catch (multicatch) para capturar la excepción:
@@ -87,9 +65,9 @@ public class CandidatosService {
 		}
 		return encontrado;
 	}
-	
-	
-	//Otra funcionalidad, utilizando una sentencia JPQL de acción:
+		
+	//Otra funcionalidad, utilizando una sentencia JPQL de acción.
+	//Este método se encarga de eliminar un candidato mediante el email facilitado:
 	public void eliminarCandidatoPorEmail(String email) {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin(); //Siempre que sea una consulta de acción, hay que iniciar la transacción.
@@ -97,6 +75,5 @@ public class CandidatosService {
 		query.setParameter(1, email);
 		query.executeUpdate();
 		tx.commit();
-	}
-	
+	}	
 }

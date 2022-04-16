@@ -18,9 +18,14 @@
         </configuration>
       </plugin>
     </plugins>
+    <!-- ESTE RECURSO ES NECESARIO PARA INDICARLE EL CLASSPATH DE:
+           META-INF/persistence.xml 
+         Cuando se ejecuta desde contenedor docker y compilado por Maven, para que no de error:
+https://stackoverflow.com/questions/45593857/could-not-find-any-meta-inf-persistence-xml-file-in-the-#classpath#:~:text=You%20need%20to%20move%20persistence,of%20the%20classpath%20is%20OK
+    -->
     <resources>
       <resource>
-        <directory>./src/main/java</directory>
+        <directory>./src/main/java</directory> <!--META-INF/persistence.xml-->
       </resource>
     </resources>
   </build>
